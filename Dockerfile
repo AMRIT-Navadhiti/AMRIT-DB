@@ -14,11 +14,8 @@ COPY src ./src
 # Build the project
 RUN mvn clean install -DENV_VAR=local
 
-# Copy the compiled classes to the container
-COPY target/classes /app/target/classes
-
 # Expose the application port
-EXPOSE 8080
+EXPOSE 8999
 
 # Pass ENV_VAR to the application
 ARG ENV_VAR=local
