@@ -11,6 +11,13 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
+# Copy common_example.properties to the container
+COPY src/main/environment/common_example.properties /app/src/main/environment/common_example.properties
+
+# Copy entrypoint script and give execute permissions
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Build the project
 RUN mvn clean install -DENV_VAR=local
 
@@ -21,5 +28,5 @@ EXPOSE 8999
 ARG ENV_VAR=local
 ENV ENV_VAR=${ENV_VAR}
 
-# Run the application
-CMD ["sh", "-c", "mvn spring-boot:run -Dspring-boot.run.profiles=${ENV_VAR}"]
+# Use entrypoint script (this ensures ENV_VAR is available)
+ENTRYPOINT ["/entrypoint.sh"]
